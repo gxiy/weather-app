@@ -64,3 +64,5 @@ temp_graph.render_to_file('hourly_temp.svg')
 
 #open file automatically 
 os.startfile(r'hourly_temp.svg', 'open')
+
+#test test
