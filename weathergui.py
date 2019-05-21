@@ -6,6 +6,9 @@ import json
 import datetime
 
 """
+Outputs graph of current weather conditions and temperatures given
+a country and city name in the GUI
+
 all weather data obtained from Open Weather Map API
 https://openweathermap.org/current#current_JSON
 """
@@ -45,12 +48,11 @@ def get_weather_data(api_key, city_code):
 
 def weather_graph(api_key, city_name, city_code):
 	#Create hourly weather graph
-	hourly_url = 'https://api.openweathermap.org/data/2.5/forecast/hourly?id=%s&appid=%s'\
+	hourly_url = 'https://api.openweathermap.org/data/2.5/forecast?id=%s&appid=%s'\
 	%(str(city_code), api_key)
 	hourly = requests.get(hourly_url)
 	hourly_data = hourly.json()
 	hourly_time, hourly_weather = [], []
-
 	start_date = hourly_data['list'][0]['dt_txt']
 	start_date = start_date[:10]
 
@@ -120,7 +122,7 @@ def main():
 			[sg.Text('How\'s the weather looking today?')],
 			[sg.Text('Country:'), sg.InputCombo(country_list)],
 			[sg.Text('City:      '), sg.InputText()],
-			[sg.Submit()]
+			[sg.Submit(), sg.Button('Disclaimer')]
 			]
 	window = sg.Window('WeatherBot').Layout(layout1)
 	
@@ -129,10 +131,15 @@ def main():
 		if event is None or event == 'Exit':
 			break
 		
+		if event == 'Disclaimer':
+			sg.Popup('Please note that there are multiple cities with the same\
+ names \n and the results may not be for the particular location you have\
+ in mind.')
+		
 		if event == 'Submit':
 			try:
 				city_name, city_code = get_citycode(alpha2_codes, city_list, values)
-				apikey = 'd980e5931a57f7cc0b7f894467ce72a2'
+				apikey = 'd6f28cf8179829c266a09c116a076a02'
 				weather_graph(apikey, city_name, city_code)
 			except IndexError:
 				sg.Popup('Sorry, that\'s not a valid city name!',
